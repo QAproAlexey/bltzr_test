@@ -3,13 +3,6 @@ import { Locator, Page, expect } from '@playwright/test';
 import { WebPage } from './webPage';
 
 export class NFTgamesPage extends WebPage {
-  readonly expectIfUseSortByName: Locator;
-  readonly expectIfUseSortByChain: Locator;
-  readonly expectIfUseSortByCategory: Locator;
-  readonly expectIfUseSortByPrice: Locator;
-  readonly expectIfUseSortByMarketCap: Locator;
-  readonly expectIfUseSortByVolume: Locator;
-  readonly expectIfUseSortByChange: Locator;
   readonly paginationNextButton: Locator;
   readonly paginationPreviousButton: Locator;
   readonly pagination1button: Locator;
@@ -30,16 +23,10 @@ export class NFTgamesPage extends WebPage {
   readonly expectReadMoreHowDoIEarnMoneyThroughNFTgamingText: Locator;
   readonly expectReadMoreOrLessHowManyNFTgamesAreThereText: Locator;
   readonly expectReadMoreOrLessCanIearnMoneyThroughNFTgamingText: Locator;
+  readonly chainColumnExpect: Locator;
 
   constructor(page: Page) {
     super(page);
-    this.expectIfUseSortByName = page.locator('//h3[contains(text(),"A")]');
-    this.expectIfUseSortByChain = page.locator('//td[contains(text(),"A")]');
-    this.expectIfUseSortByCategory = page.locator('//td[contains(text(),"C")]');
-    this.expectIfUseSortByPrice = page.locator('//td[contains(text()," ")]');
-    this.expectIfUseSortByMarketCap = page.locator('//td[contains(text()," ")]');
-    this.expectIfUseSortByVolume = page.locator('//td[contains(text()," ")]');
-    this.expectIfUseSortByChange = page.locator('//td[contains(text()," ")]');
     this.paginationNextButton = page.locator('[class="paginate_button next"]');
     this.paginationPreviousButton = page.locator('[class="paginate_button previous"]');
     this.pagination1button = page.locator('[data-dt-idx="1"]');
@@ -54,22 +41,28 @@ export class NFTgamesPage extends WebPage {
     this.rightButtonInTheCarousel = page.locator('[class="slick-next slick-arrow"]');
     this.expectedIfUseLeftButtonInTheCarusel = page.locator('(//h3[contains(text(),"Thetan Arena")])[1]');
     this.expectedIfUseRightButtonInTheCarusel = page.locator('(//h3[contains(text(),"Splinterlands")])[1]');
-    this.readMoreButton = page.locator('[class="icon icon-angle-down"]');
-    this.readLessButton = page.locator('[class="icon icon-angle-down"]');
-    this.expectReadMoreOrLessWhatIsNFTgamingText = page.locator('text=NFT gaming is playing NFT games');
-    this.expectReadMoreHowDoIEarnMoneyThroughNFTgamingText = page.locator('text=For most NFT games out there');
-    this.expectReadMoreOrLessHowManyNFTgamesAreThereText = page.locator('text=There are tons of different NFT games');
-    this.expectReadMoreOrLessCanIearnMoneyThroughNFTgamingText = page.locator('text=Yes, you can earn money through NFT gaming');
+    this.readMoreButton = page.locator('(//a[contains(text(),"Read More ")])');
+    this.readLessButton = page.locator('(//a[contains(text(),"Read Less ")])');
+    this.expectReadMoreOrLessWhatIsNFTgamingText = page.locator('(//h3[contains(text(),"NFT gaming is playing NFT games")])');
+    this.expectReadMoreHowDoIEarnMoneyThroughNFTgamingText = page.locator('(//h3[contains(text(),"For most NFT games out there")])');
+    this.expectReadMoreOrLessHowManyNFTgamesAreThereText = page.locator('(//h3[contains(text(),"There are tons of different NFT games")])');
+    this.expectReadMoreOrLessCanIearnMoneyThroughNFTgamingText = page.locator('(//h3[contains(text(),"Yes, you can earn money through NFT gaming")])');
+    this.chainColumnExpect = page.locator('//td[@data-label="Chain"]');
   }
 
   async selectChainFilterByName(text) {
-    let chainFilterOption = this.page.locator(`[data-cat="${text}"]`);
+    let chainFilterOption = this.page.locator(`[data-cat="${text}"]`.toLowerCase());
     await chainFilterOption.click();
   }
 
-  async showDropdown(text) {
-    let showDropdownOption = this.page.locator(`//select[@name="DataTables_Table_0_length"]//option[value="${text}"]`);
-    await showDropdownOption.click();
+  async checkThatChainFilterByNameChosen(text) {
+    let chainColumnOption = this.page.$(`//td[@data-label="Chain"]`);
+    await chainColumnOption.toContainText(text);
+  }
+
+  async showDropdown(value) {
+    await this.dropdownShowInTheTable.click();
+    await this.dropdownShowInTheTable.selectOption(value);
   }
 
   async selectSort(text) {
@@ -77,14 +70,14 @@ export class NFTgamesPage extends WebPage {
     await sortOption.click();
   }
 
-  async expectSelectedChainFilterByName(text) {
-    let filteredChain = this.page.locator(`//td[contains(text(),"${text}"]`);
-    await filteredChain;
+  async clickReadMoreButton() {
+    await this.readMoreButton.click();
+    expect(await this.readLessButton).toBeVisible();
   }
 
-  async clickReadMoreButtons(text) {
-    let readMoreOption = this.page.locator(`text=${text}`);
-    await readMoreOption.click();
+  async clickReadLessButton() {
+    await this.readLessButton.click();
+    expect(await this.readMoreButton).toBeVisible();
   }
 
   async clickFAQsButtons(text) {

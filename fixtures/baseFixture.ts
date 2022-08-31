@@ -1,10 +1,6 @@
 import { NFTgamesPage } from '../pageObjects/nftGamesPage';
 import { TopNavigation } from '../pageObjects/topNavigation';
-<<<<<<< HEAD
 import { WebPage } from '../pageObjects/webPage';
-=======
-import { NFTgamesPage } from '../pageObjects/nftGamesPage';
->>>>>>> 6df476cbca8af05adc65aefcba8911e41a2f6d74
 import { test as base } from '@playwright/test';
 
 export const test = base.extend<{

@@ -7,9 +7,4 @@ export class WebPage {
     this.page = page;
   }
 
-  async hover(locator: Locator) {
-    await this.page.waitForLoadState();
-    await locator.hover();
-  }
-
 }

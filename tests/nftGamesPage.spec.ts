@@ -4,87 +4,39 @@ import { test } from '../fixtures/baseFixture';
 
 test.describe('NFT Games page', async () => {
   test.beforeEach(async ({ webPage, topNavigation }) => {
-    await webPage.hover(topNavigation.dropdownMenu);
+    await topNavigation.dropdownMenu.hover();
     await topNavigation.nftGamesButton.click();
   });
 
-  test('Test the ability to use blockchaine filters in the table', async ({ nftGamesPage }) => {
-    await nftGamesPage.selectChainFilterByName('avalanche');
-    await nftGamesPage.expectSelectedChainFilterByName('Avalanche');
+  const blockchaine = ['Avalanche', 'BSC', 'ETH', 'HIVE', 'Polygon', 'Ronin', 'Solana', 'Tezos', 'WAX', 'Other']
+  for (const name of blockchaine) {
+    test(`Test the ability to use blockchaine filters in the table with ${name}`, async ({ nftGamesPage }) => {
+      await nftGamesPage.selectChainFilterByName(name);
+      await nftGamesPage.checkThatChainFilterByNameChosen(name);
+    })
+  };
 
-    await nftGamesPage.selectChainFilterByName('bsc');
-    await nftGamesPage.expectSelectedChainFilterByName('BSC');
-
-    await nftGamesPage.selectChainFilterByName('eth');
-    await nftGamesPage.expectSelectedChainFilterByName('ETH');
-
-    await nftGamesPage.selectChainFilterByName('hive');
-    await nftGamesPage.expectSelectedChainFilterByName('HIVE');
-
-    await nftGamesPage.selectChainFilterByName('polygon');
-    await nftGamesPage.expectSelectedChainFilterByName('Polygon');
-
-    await nftGamesPage.selectChainFilterByName('ronin');
-    await nftGamesPage.expectSelectedChainFilterByName('Ronin');
-
-    await nftGamesPage.selectChainFilterByName('solana');
-    await nftGamesPage.expectSelectedChainFilterByName('Solana');
-
-    await nftGamesPage.selectChainFilterByName('tezos');
-    await nftGamesPage.expectSelectedChainFilterByName('Tezos');
-
-    await nftGamesPage.selectChainFilterByName('wax');
-    await nftGamesPage.expectSelectedChainFilterByName('WAX');
-
-    await nftGamesPage.selectChainFilterByName('other');
-    await nftGamesPage.expectSelectedChainFilterByName('Other');
-  });
-
-  test('Test the ability to use filters by name, chain, category, price, market cap, volume, change in the table', async ({ nftGamesPage }) => {
-    await nftGamesPage.selectSort('Name');
-
-    await expect(nftGamesPage.expectIfUseSortByName).toBeVisible();
-
-    await nftGamesPage.selectSort('Chain');
-
-    await expect(nftGamesPage.expectIfUseSortByChain).toBeVisible();
-
-    await nftGamesPage.selectSort('Category');
-
-    await expect(nftGamesPage.expectIfUseSortByCategory).toBeVisible();
-
-    await nftGamesPage.selectSort('Price');
-
-    await expect(nftGamesPage.expectIfUseSortByPrice).toBeVisible();
-
-    await nftGamesPage.selectSort('Market Cap');
-
-    await expect(nftGamesPage.expectIfUseSortByMarketCap).toBeVisible();
-
-    await nftGamesPage.selectSort('Volume(24h)');
-
-    await expect(nftGamesPage.expectIfUseSortByVolume).toBeVisible();
-
-    await nftGamesPage.selectSort('24h% change');
-
-    await expect(nftGamesPage.expectIfUseSortByChange).toBeVisible();
-
-  });
+  const sort = ['Name', 'Chain', 'Category', 'Price', 'Market Cap', 'Volume(24h)', '24h% change']
+  for (const title of sort) {
+    test(`Test the ability to use sort by name, chain, category, price, market cap, volume, change in the table with ${title}`, async ({ nftGamesPage }) => {
+      await nftGamesPage.selectSort(title);
+    })
+  };
 
   test('Test the ability to use pagination in the table', async ({ webPage, nftGamesPage }) => {
-    await webPage.click(nftGamesPage.paginationNextButton);
+    await nftGamesPage.paginationNextButton.click();
 
     await expect(nftGamesPage.paginationCurrentbutton).toContainText('2');
 
-    await webPage.click(nftGamesPage.paginationPreviousButton);
+    await nftGamesPage.paginationPreviousButton.click();
 
     await expect(nftGamesPage.paginationCurrentbutton).toContainText('1');
 
-    await webPage.click(nftGamesPage.pagination2button);
+    await nftGamesPage.pagination2button.click();
 
     await expect(nftGamesPage.paginationCurrentbutton).toContainText('2');
 
-    await webPage.click(nftGamesPage.pagination1button);
+    await nftGamesPage.pagination1button.click();
 
     await expect(nftGamesPage.paginationCurrentbutton).toContainText('1');
 
@@ -111,55 +63,45 @@ test.describe('NFT Games page', async () => {
   });
 
   test('Test the ability to use carusel', async ({ webPage, nftGamesPage }) => {
-    await webPage.click(nftGamesPage.leftButtonInTheCarousel);
+    await nftGamesPage.leftButtonInTheCarousel.click();
 
     await expect(nftGamesPage.expectedIfUseLeftButtonInTheCarusel).toBeVisible();
 
-    await webPage.click(nftGamesPage.rightButtonInTheCarousel);
+    await nftGamesPage.rightButtonInTheCarousel.click();
 
     await expect(nftGamesPage.expectedIfUseRightButtonInTheCarusel).toBeVisible();
   });
 
-  test('Opening/Closing additional info with clicking on the btn Read More/Read Less', async ({ webPage, nftGamesPage }) => {
-    await nftGamesPage.clickFAQsButtons(faqsData.whatIsNFTgaming);
-    await webPage.click(nftGamesPage.readMoreButton);
+  test('Opening/Closing additional info with clicking on the btn Read More/Read Less', async ({ nftGamesPage }) => {
+    await nftGamesPage.clickReadMoreButton();
 
-    await expect(nftGamesPage.readLessButton).toBeVisible();
-
-    await webPage.click(nftGamesPage.readLessButton);
-
-    await expect(nftGamesPage.readMoreButton).toBeVisible();
+    await nftGamesPage.clickReadLessButton();
   });
 
-  test('Opening/Closing additional info with clicking on the btn Read More/Read Less in the What Is NFT gaming?', async ({ nftGamesPage }) => {
+  test('Opening/Closing additional info with clicking on the btn Read More/Read Less in the FAQs section', async ({ nftGamesPage }) => {
     await nftGamesPage.clickFAQsButtons(faqsData.whatIsNFTgaming);
     await expect(nftGamesPage.expectReadMoreOrLessWhatIsNFTgamingText).toContainText(faqsData.expectWhatIsNFTgaming);
 
     await nftGamesPage.clickFAQsButtons(faqsData.whatIsNFTgaming);
     await expect(nftGamesPage.expectReadMoreOrLessWhatIsNFTgamingText).not.toContainText(faqsData.expectWhatIsNFTgaming);
-  });
 
-  test('Opening/Closing additional info with clicking on the btn Read More/Read Less in the How do I earn money through NFT gaming?', async ({ webPage, nftGamesPage }) => {
     await nftGamesPage.clickFAQsButtons(faqsData.howDoIEarnMoneyThroughNFTgaming);
     await expect(nftGamesPage.expectReadMoreHowDoIEarnMoneyThroughNFTgamingText).toContainText(faqsData.expectHowDoIEarnMoneyThroughNFTgaming);
 
     await nftGamesPage.clickFAQsButtons(faqsData.howDoIEarnMoneyThroughNFTgaming);
     await expect(nftGamesPage.expectReadMoreHowDoIEarnMoneyThroughNFTgamingText).not.toContainText(faqsData.expectHowDoIEarnMoneyThroughNFTgaming);
-  });
 
-  test('Opening/Closing additional info with clicking on the btn Read More/Read Less in the How many NFT games are there?', async ({ webPage, nftGamesPage }) => {
     await nftGamesPage.clickFAQsButtons(faqsData.howManyNFTgamesAreThere);
     await expect(nftGamesPage.expectReadMoreOrLessHowManyNFTgamesAreThereText).toContainText(faqsData.expectHowManyNFTgamesAreThere);
 
     await nftGamesPage.clickFAQsButtons(faqsData.howManyNFTgamesAreThere);
     await expect(nftGamesPage.expectReadMoreOrLessHowManyNFTgamesAreThereText).not.toContainText(faqsData.expectHowManyNFTgamesAreThere);
-  });
 
-  test('Opening/Closing additional info with clicking on the btn Read More/Read Less in the Can I earn money through NFT gaming?', async ({ webPage, nftGamesPage }) => {
     await nftGamesPage.clickFAQsButtons(faqsData.canIearnMoneyThroughNFTgaming);
     await expect(nftGamesPage.expectReadMoreOrLessWhatIsNFTgamingText).toContainText(faqsData.expectCanIearnMoneyThroughNFTgaming);
 
     await nftGamesPage.clickFAQsButtons(faqsData.canIearnMoneyThroughNFTgaming);
     await expect(nftGamesPage.expectReadMoreOrLessWhatIsNFTgamingText).not.toContainText(faqsData.expectCanIearnMoneyThroughNFTgaming);
   });
+
 });
