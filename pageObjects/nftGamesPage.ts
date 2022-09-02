@@ -3,10 +3,6 @@ import { Locator, Page, expect } from '@playwright/test';
 import { WebPage } from './webPage';
 
 export class NFTgamesPage extends WebPage {
-  readonly paginationNextButton: Locator;
-  readonly paginationPreviousButton: Locator;
-  readonly pagination1button: Locator;
-  readonly pagination2button: Locator;
   readonly paginationCurrentbutton: Locator;
   readonly dropdownShowInTheTable: Locator;
   readonly expectedIfChosen25InDopdownShow: Locator;
@@ -19,18 +15,11 @@ export class NFTgamesPage extends WebPage {
   readonly expectedIfUseRightButtonInTheCarusel: Locator;
   readonly readMoreButton: Locator;
   readonly readLessButton: Locator;
-  readonly expectReadMoreOrLessWhatIsNFTgamingText: Locator;
-  readonly expectReadMoreHowDoIEarnMoneyThroughNFTgamingText: Locator;
-  readonly expectReadMoreOrLessHowManyNFTgamesAreThereText: Locator;
-  readonly expectReadMoreOrLessCanIearnMoneyThroughNFTgamingText: Locator;
+  readonly expectResultIfClosedAdditionalInfo: Locator;
   readonly chainColumnExpect: Locator;
 
   constructor(page: Page) {
     super(page);
-    this.paginationNextButton = page.locator('[class="paginate_button next"]');
-    this.paginationPreviousButton = page.locator('[class="paginate_button previous"]');
-    this.pagination1button = page.locator('[data-dt-idx="1"]');
-    this.pagination2button = page.locator('[data-dt-idx="2"]');
     this.paginationCurrentbutton = page.locator('[class="paginate_button current"]');
     this.dropdownShowInTheTable = page.locator('select[name="DataTables_Table_0_length"]');
     this.expectedIfChosen25InDopdownShow = page.locator('(//div[@class="filter-name__detail"])[25]');
@@ -41,23 +30,25 @@ export class NFTgamesPage extends WebPage {
     this.rightButtonInTheCarousel = page.locator('[class="slick-next slick-arrow"]');
     this.expectedIfUseLeftButtonInTheCarusel = page.locator('(//h3[contains(text(),"Thetan Arena")])[1]');
     this.expectedIfUseRightButtonInTheCarusel = page.locator('(//h3[contains(text(),"Splinterlands")])[1]');
-    this.readMoreButton = page.locator('(//a[contains(text(),"Read More ")])');
-    this.readLessButton = page.locator('(//a[contains(text(),"Read Less ")])');
-    this.expectReadMoreOrLessWhatIsNFTgamingText = page.locator('(//h3[contains(text(),"NFT gaming is playing NFT games")])');
-    this.expectReadMoreHowDoIEarnMoneyThroughNFTgamingText = page.locator('(//h3[contains(text(),"For most NFT games out there")])');
-    this.expectReadMoreOrLessHowManyNFTgamesAreThereText = page.locator('(//h3[contains(text(),"There are tons of different NFT games")])');
-    this.expectReadMoreOrLessCanIearnMoneyThroughNFTgamingText = page.locator('(//h3[contains(text(),"Yes, you can earn money through NFT gaming")])');
-    this.chainColumnExpect = page.locator('//td[@data-label="Chain"]');
+    this.readMoreButton = page.locator('(//a[text()="Read More "])');
+    this.readLessButton = page.locator('(//a[text()="Read Less "])');
+    this.expectResultIfClosedAdditionalInfo = page.locator('(style="display: none;")');
+    this.chainColumnExpect = page.locator('(//div[@class="filter-name__detail full"]) [1]');
   }
 
   async selectChainFilterByName(text) {
     let chainFilterOption = this.page.locator(`[data-cat="${text}"]`.toLowerCase());
     await chainFilterOption.click();
+    await this.page.waitForLoadState();
   }
 
-  async checkThatChainFilterByNameChosen(text) {
-    let chainColumnOption = this.page.$(`//td[@data-label="Chain"]`);
-    await chainColumnOption.toContainText(text);
+  async checkThatTheChaineFiltered(name: string) {
+    const rows = this.page.locator('[data-label="Chain"]');
+    const texts = await rows.allTextContents();
+
+    for (const chain of texts) {
+      expect(chain).toContain(name);
+    }
   }
 
   async showDropdown(value) {
@@ -70,19 +61,42 @@ export class NFTgamesPage extends WebPage {
     await sortOption.click();
   }
 
+  async checkThatTheSorted(text) {
+    const rows = this.page.locator(`(//td[text()="${text}"])`);
+    const texts = await rows.allTextContents();
+
+    for (const chain of texts) {
+      expect(chain).toContain(name);
+    }
+  }
+
+  async selectNextOrPreviousButtonInPagination(text) {
+    let selectPaginationOption = this.page.locator(`[class="paginate_button ${text}"]`);
+    await selectPaginationOption.click();
+  }
+
+  async selectNumberButtonInPagination(text) {
+    let selectPaginationOption = this.page.locator(`[data-dt-idx="${text}"]`);
+    await selectPaginationOption.click();
+  }
+
   async clickReadMoreButton() {
     await this.readMoreButton.click();
-    expect(await this.readLessButton).toBeVisible();
+    await this.page.waitForLoadState();
   }
 
   async clickReadLessButton() {
     await this.readLessButton.click();
-    expect(await this.readMoreButton).toBeVisible();
+    await this.page.waitForLoadState();
   }
 
   async clickFAQsButtons(text) {
-    let faqsOption = this.page.locator(`text=${text}`);
+    let faqsOption = this.page.locator(`(//h3[text()="${text}"])`);
     await faqsOption.click();
   }
 
+  async checkFaqBlockDisplayState(name: string) {
+    let expectedFunction = await this.expectResultIfClosedAdditionalInfo.getAttribute('display');
+    expect(expectedFunction).toBe(name)
+  }
 }
