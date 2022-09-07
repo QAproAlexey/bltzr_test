@@ -1,4 +1,5 @@
 import { Locator, Page } from '@playwright/test';
+
 import { WebPage } from './webPage';
 
 export class TopNavigation extends WebPage {
@@ -35,9 +36,9 @@ export class TopNavigation extends WebPage {
     this.whitepaperButton = page.locator('(//p[@class="chakra-text css-epvm6"])[8]');
     this.careersButton = page.locator('(//p[@class="chakra-text css-epvm6"])[9]');
     this.contactUsButton = page.locator('(//p[@class="chakra-text css-epvm6"])[10]');
-    this.researchButton = page.locator('text=Research');
-    this.launchpadButton = page.locator('text=Launchpad');
-    this.marketplaceButton = page.locator('text=Marketplace');
+    this.researchButton = page.locator('(//a[text()="Research"])[1]');
+    this.launchpadButton = page.locator('(//a[text()="Launchpad"])');
+    this.marketplaceButton = page.locator('(//a[text()="Marketplace"])');
     this.lendButton = page.locator('text=Lend');
     this.playButton = page.locator('text=Play');
     this.connectWalletButton = page.locator('text=Connect wallet');

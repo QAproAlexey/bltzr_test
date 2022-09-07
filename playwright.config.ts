@@ -1,7 +1,7 @@
 import { PlaywrightTestConfig } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
-  globalTimeout: 480000,
+  globalTimeout: 4800000,
   timeout: 60000,
   retries: 0,
   reporter: 'list',
@@ -18,7 +18,7 @@ const config: PlaywrightTestConfig = {
     video: 'retain-on-failure',
     screenshot: 'only-on-failure',
     actionTimeout: 30000,
-    navigationTimeout: 30000,
+    navigationTimeout: 100000,
   },
 };
 
