@@ -1,5 +1,5 @@
 import { downloadFile } from "../helpers/api/downloadFile";
-import extract from 'extract-zip';
+const extract = require('extract-zip');
 
 const metamaskLink = 'https://github.com/MetaMask/metamask-extension/releases/download/v10.15.0/metamask-chrome-10.15.0.zip';
 
