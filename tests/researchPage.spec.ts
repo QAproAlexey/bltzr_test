@@ -2,9 +2,8 @@ import { expect } from '@playwright/test';
 import { test } from '../fixtures/baseFixture';
 
 test.describe('Research Page', async () => {
-  test.beforeEach(async ({ page, webPage, topNavigation }) => {
-    await webPage.click(topNavigation.researchButton);
-    await page.waitForLoadState();
+  test.beforeEach(async ({ topNavigation }) => {
+    await topNavigation.selectButtonInTopNavigation('Research');
   });
 
   const gameName = ['Balthazar Research Report: Conquer Laria in Koakuma', 'Balthazar Research Report: Explore Nostalgia in Domi Online', 'Balthazar Research Report: Soar through space in Phantom Galaxies', 'Balthazar Research Report: Can’t Stop the Guild of Guardians', 'Balthazar Research Report: The Harvest is Nigh']
@@ -21,9 +20,6 @@ test.describe('Research Page', async () => {
 
     await researchPage.selectNextOrPreviousButtonInPagination('Previous');
     await expect(researchPage.currentPagePagination).toContainText('1');
-
-    await researchPage.selectNumberButtonInPagination('2');
-    await expect(researchPage.currentPagePagination).toContainText('2');
 
     await researchPage.selectNumberButtonInPagination('3');
     await expect(researchPage.currentPagePagination).toContainText('3');

@@ -2,9 +2,8 @@ import { expect } from '@playwright/test';
 import { test } from '../fixtures/baseFixture';
 
 test.describe('Marketplace Page', async () => {
-  test.beforeEach(async ({ page, webPage, topNavigation }) => {
-    await webPage.click(topNavigation.marketplaceButton);
-    await page.waitForLoadState();
+  test.beforeEach(async ({ topNavigation }) => {
+    await topNavigation.selectButtonInTopNavigation('Marketplace');
   });
 
 

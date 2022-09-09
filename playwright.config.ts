@@ -1,15 +1,15 @@
 import { PlaywrightTestConfig } from '@playwright/test';
+import { timeouts } from './helpers/timeouts';
 
 const config: PlaywrightTestConfig = {
-  globalTimeout: 4800000,
-  timeout: 60000,
+  globalTimeout: timeouts.globalTestsTimeout,
+  timeout: timeouts.testTimeout,
   retries: 0,
   reporter: 'list',
   testDir: './tests',
   outputDir: './test-results',
-  expect: {
-    timeout: 10000
-  },
+  globalSetup: './setup/globalSetup.ts',
+
   use: {
     baseURL: 'https://app.bltzr.gg/',
     browserName: 'chromium',
@@ -17,9 +17,13 @@ const config: PlaywrightTestConfig = {
     headless: true,
     video: 'retain-on-failure',
     screenshot: 'only-on-failure',
-    actionTimeout: 30000,
-    navigationTimeout: 100000,
+    actionTimeout: timeouts.mediumTimeout,
+    navigationTimeout: timeouts.mediumTimeout,
   },
+  expect: {
+    timeout: timeouts.mediumTimeout,
+  }
+
 };
 
 export default config;

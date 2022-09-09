@@ -11,8 +11,10 @@ export class NFTgamesPage extends WebPage {
   readonly expectedIfUseRightButtonInTheCarusel: Locator;
   readonly readMoreButton: Locator;
   readonly readLessButton: Locator;
-  readonly expectResultIfOpenedAdditionalInfo: Locator;
-  readonly expectResultIfClosedAdditionalInfo: Locator;
+  readonly expectWhatIsNFTgaming: Locator;
+  readonly expectHowDoIEarnMoneyThroughNFTgaming: Locator;
+  readonly expectHowManyNFTgamesAreThere: Locator;
+  readonly expectCanIEarnMoneyThroughNFTgaming: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -24,8 +26,10 @@ export class NFTgamesPage extends WebPage {
     this.expectedIfUseRightButtonInTheCarusel = page.locator('(//h3[contains(text(),"Splinterlands")])[1]');
     this.readMoreButton = page.locator('(//a[text()="Read More "])');
     this.readLessButton = page.locator('(//a[text()="Read Less "])');
-    this.expectResultIfOpenedAdditionalInfo = page.locator('//div[@style="display: block;"]')
-    this.expectResultIfClosedAdditionalInfo = page.locator('//div[@style="display: none;"]')
+    this.expectWhatIsNFTgaming = page.locator('(//p[contains(text(),"NFT gaming is playing NFT games that offer")])');
+    this.expectHowDoIEarnMoneyThroughNFTgaming = page.locator('(//p[contains(text(),"For most NFT games out there, you need to play to earn money")])');
+    this.expectHowManyNFTgamesAreThere = page.locator('(//p[contains(text(),"There are tons of different NFT games out there")])');
+    this.expectCanIEarnMoneyThroughNFTgaming = page.locator('(//p[contains(text(),"Yes, you can earn money through NFT gaming")])');
   }
 
   async selectAmountInshowDropdown(value) {
@@ -90,8 +94,4 @@ export class NFTgamesPage extends WebPage {
     await faqsOption.click();
   }
 
-  // async checkFaqBlockDisplayState(name: string) {
-  //   let expectedFunction = await this.page.locator('[style="display: block;"]').getAttribute('display');
-  //   expect(expectedFunction).toBe(name)
-  // }
 }

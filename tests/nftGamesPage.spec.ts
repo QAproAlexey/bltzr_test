@@ -2,10 +2,8 @@ import { expect } from '@playwright/test';
 import { test } from '../fixtures/baseFixture';
 
 test.describe('NFT Games page', async () => {
-  test.beforeEach(async ({ page, webPage, topNavigation }) => {
-    await webPage.hover(topNavigation.dropdownMenu);
-    await webPage.click(topNavigation.nftGamesButton);
-    await page.waitForLoadState();
+  test.beforeEach(async ({ topNavigation }) => {
+    await topNavigation.selectButtonInTheLeftDropdown('NFT games');
   });
 
   const amountInShowDopdown = ['25', '50', '10', '100']
@@ -39,9 +37,6 @@ test.describe('NFT Games page', async () => {
     await nftGamesPage.selectNextOrPreviousButtonInPagination('Previous');
     await expect(nftGamesPage.paginationCurrentbutton).toContainText('1');
 
-    await nftGamesPage.selectNumberButtonInPagination('2');
-    await expect(nftGamesPage.paginationCurrentbutton).toContainText('2');
-
     await nftGamesPage.selectNumberButtonInPagination('3');
     await expect(nftGamesPage.paginationCurrentbutton).toContainText('3');
   });
@@ -58,26 +53,41 @@ test.describe('NFT Games page', async () => {
   });
 
   test('Opening/Closing additional info with clicking on the btn Read More/Read Less', async ({ nftGamesPage }) => {
-    await test.step('Clicking on the Read More button in carusel', async () => {
+    await test.step('Clicking on the Read More button', async () => {
       await nftGamesPage.clickReadMoreButton();
       await expect(nftGamesPage.readLessButton).toBeVisible();
     });
-    await test.step('Clicking on the Read Less button in carusel', async () => {
+    await test.step('Clicking on the Read Less button', async () => {
       await nftGamesPage.clickReadLessButton();
       await expect(nftGamesPage.readMoreButton).toBeVisible();
     });
   });
 
-
-  const faqsButtons = ['What Is NFT gaming?', 'How do I earn money through NFT gaming?', 'How many NFT games are there?', 'Can I earn money through NFT gaming?']
-  for (const name of faqsButtons) {
-    test(`Opening/Closing additional info with clicking on the btn Read More/Read Less in the FAQs section with ${name}`, async ({ nftGamesPage }) => {
-      await nftGamesPage.clickFAQsButtons(name);
-      await expect(nftGamesPage.expectResultIfOpenedAdditionalInfo).toBeVisible();
-
-      await nftGamesPage.clickFAQsButtons(name);
-      await expect(nftGamesPage.expectResultIfClosedAdditionalInfo).toBeVisible();
+  test('Opening/Closing additional info with clicking on the btn Read More/Read Less in the FAQs section', async ({ nftGamesPage }) => {
+    await test.step('Clicking on the What Is NFT gaming button', async () => {
+      await nftGamesPage.clickFAQsButtons('What Is NFT gaming?');
+      await expect(nftGamesPage.expectWhatIsNFTgaming).toBeVisible();
+      await nftGamesPage.clickFAQsButtons('What Is NFT gaming?');
+      await expect(nftGamesPage.expectWhatIsNFTgaming).not.toBeVisible();
     });
-  }
+    await test.step('Clicking on the How do I earn money through NFT gaming button', async () => {
+      await nftGamesPage.clickFAQsButtons('How do I earn money through NFT gaming?');
+      await expect(nftGamesPage.expectHowDoIEarnMoneyThroughNFTgaming).toBeVisible();
+      await nftGamesPage.clickFAQsButtons('How do I earn money through NFT gaming?');
+      await expect(nftGamesPage.expectHowDoIEarnMoneyThroughNFTgaming).not.toBeVisible();
+    });
+    await test.step('Clicking on the How many NFT games are there button', async () => {
+      await nftGamesPage.clickFAQsButtons('How many NFT games are there?');
+      await expect(nftGamesPage.expectHowManyNFTgamesAreThere).toBeVisible();
+      await nftGamesPage.clickFAQsButtons('How many NFT games are there?');
+      await expect(nftGamesPage.expectHowManyNFTgamesAreThere).not.toBeVisible();
+    });
+    await test.step('Clicking on the Can I earn money through NFT gaming button', async () => {
+      await nftGamesPage.clickFAQsButtons('Can I earn money through NFT gaming?');
+      await expect(nftGamesPage.expectCanIEarnMoneyThroughNFTgaming).toBeVisible();
+      await nftGamesPage.clickFAQsButtons('Can I earn money through NFT gaming?');
+      await expect(nftGamesPage.expectCanIEarnMoneyThroughNFTgaming).not.toBeVisible();
+    });
+  });
 
 });
