@@ -1,21 +1,19 @@
 import { test as base, chromium, expect } from '@playwright/test';
+
 import { ConnectWalletScreen } from "../pageObjects/connectWalletScreen";
-import { MetamaskPage } from "../pageObjects/metamaskPage";
-import { WebPage } from "../pageObjects/webPage";
+import { MetamaskPage } from "../pageObjects/actions/metamaskPage";
 import { TopNavigation } from "../pageObjects/topNavigation";
 
 type ixsFixtures = {
   connectWalletScreen: ConnectWalletScreen;
   metamaskPage: MetamaskPage;
   topNavigation: TopNavigation;
-  webPage: WebPage;
 };
 
 export const test = base.extend<ixsFixtures>({
   context: async ({ browser }, use) => {
     const pathToExtension = require('path').join(__dirname, '..', 'extensions/metamask');
     const userDataDir = '';
-
     const browserContext = await chromium.launchPersistentContext(userDataDir, {
       headless: false,
       args: [
@@ -27,7 +25,6 @@ export const test = base.extend<ixsFixtures>({
     await Promise.all([
       browserContext.waitForEvent('page'),
     ]);
-
     await use(browserContext);
     await browserContext.close();
   },
@@ -55,10 +52,6 @@ export const test = base.extend<ixsFixtures>({
 
   topNavigation: async ({ page, context }, use) => {
     await use(new TopNavigation(page, context));
-  },
-
-  webPage: async ({ page, context }, use) => {
-    await use(new WebPage(page, context));
   },
 
 });

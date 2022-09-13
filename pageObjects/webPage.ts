@@ -7,21 +7,4 @@ export class WebPage {
     this.page = page;
   }
 
-  async uncheckCheckboxIfSelected(locator: Locator) {
-    const statusOfCheckbox = await locator.isChecked();
-
-    if (statusOfCheckbox) {
-      await locator.uncheck();
-    }
-
-
-  }
-
-  async checkCheckboxIfNotSelected(locator: Locator) {
-    const statusOfCheckbox = await locator.isChecked();
-
-    if (!statusOfCheckbox) {
-      await locator.check();
-    }
-  }
 }

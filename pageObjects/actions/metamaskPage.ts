@@ -1,14 +1,15 @@
-import { WebPage } from "./webPage";
-import { Page, BrowserContext, expect } from '@playwright/test';
-import { MetamaskPageElements } from "./metamaskPageElements";
-import { timeouts } from "../helpers/timeouts";
+import { BrowserContext, Page, expect } from '@playwright/test';
+
+import { MetamaskPageElements } from "../elements/metamaskPageElements";
+import { WebPage } from "../webPage";
+import { timeouts } from "../../helpers/timeouts";
 
 export class MetamaskPage extends WebPage {
   readonly context: BrowserContext;
   readonly metamaskElements: MetamaskPageElements;
 
   constructor(page: Page, context?: BrowserContext) {
-    super(page);
+    super(page, context);
     this.metamaskElements = new MetamaskPageElements(page);
     this.context = context;
   }
@@ -33,7 +34,6 @@ export class MetamaskPage extends WebPage {
       await listOfFields[i].fill(arrayOfWords[i]);
     }
   }
-
 
   async proceedToRecoveryPhrase() {
     await this.metamaskElements.confirmButton.click();
@@ -68,45 +68,12 @@ export class MetamaskPage extends WebPage {
     await this.metamaskElements.closeInfoPopUp.click();
   }
 
-  async openAccountDetails() {
-    await this.metamaskElements.optionMenuButton.click();
-    await this.metamaskElements.accountDetailsMenuButton.click();
-  }
-
   async signMetamask(page: Page) {
     const signButton = page.locator(this.metamaskElements.signMetamaskRequestPopUpButton);
-
     await Promise.all([
       page.waitForEvent('close'),
       signButton.click()
     ]);
   }
 
-  async enterPasswordsForNewWallet(password: string) {
-    await this.metamaskElements.createPasswordField.fill(password);
-    await this.metamaskElements.confirmPasswordField.fill(password)
-  }
-
-  async selectTermsCheckbox() {
-    await this.metamaskElements.termsCheckbox.click()
-  }
-
-  async clickCreateNewWalletButton() {
-    await this.metamaskElements.confirmButton.click()
-  }
-
-  async getSeedPhrase() {
-    await this.metamaskElements.revealSeedPhraseButton.click();
-    return await this.metamaskElements.seedPhraseBlock.textContent();
-  }
-
-  async selectSeedPhraseInCorrectOrder(seedPhrase: string) {
-    const arrayOfWords = seedPhrase.split(" ");
-
-    for (const word of arrayOfWords) {
-      let wordSelector = this.page.locator(`[data-testid="draggable-seed-${word}"]`);
-
-      await wordSelector.click();
-    }
-  }
 }

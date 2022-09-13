@@ -1,26 +1,26 @@
 import { Locator, Page, expect } from '@playwright/test';
-
+import { timeouts } from "../helpers/timeouts";
 import { WebPage } from './webPage';
 
 export class MarketplacePage extends WebPage {
   readonly checkBoxChecked: Locator;
-  readonly buyButton: Locator;
+  readonly firstElemetBuyButton: Locator;
   readonly clearAllFiltersButton: Locator;
 
   constructor(page: Page) {
     super(page);
     this.checkBoxChecked = page.locator('//span[@data-checked]');
-    this.buyButton = page.locator('(//button[@class="chakra-button css-gf2dhn"]) [1]');
+    this.firstElemetBuyButton = page.locator('(//button[@class="chakra-button css-gf2dhn"]) [1]');
     this.clearAllFiltersButton = page.locator('[class="chakra-text css-146q31f"]');
   }
 
   async selectFilterCheckBox(text) {
-    await expect(this.buyButton).toBeVisible();
+    await this.page.waitForTimeout(timeouts.shortTimeout);
     let checkBoxOption = this.page.locator(`(//p[text()="${text}"])`);
     await checkBoxOption.check();
   }
 
-  async checkThatTheFilterCheckBoxChecked(text: string) {
+  async checkThatTheListFiltered(text: string) {
     const rows = this.page.locator('(//td[@class="css-12t8qlj"] [3])');
     const texts = await rows.allTextContents();
 
@@ -29,20 +29,12 @@ export class MarketplacePage extends WebPage {
     }
   }
 
-  async checkThaTheCheckBoxChecked() {
-    await expect(this.checkBoxChecked).toBeVisible();
-  }
-
   async checkThatTheCheckBoxUnChecked() {
     await expect(this.checkBoxChecked).not.toBeVisible();
   }
 
   async clickingOnTheClearAllFiltersButton() {
     await this.clearAllFiltersButton.click();
-  }
-
-  async clickingOnTheBuyButton() {
-    await this.buyButton.click();
   }
 
   async expectIfclickingOnTheBuyButton() {

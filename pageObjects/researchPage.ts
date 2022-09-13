@@ -18,10 +18,6 @@ export class ResearchPage extends WebPage {
     await chainFilterOption.click();
   }
 
-  async checkThaTheCheckBoxChecked() {
-    await expect(this.checkBoxChecked).toBeVisible();
-  }
-
   async selectNextOrPreviousButtonInPagination(text) {
     let selectPaginationOption = this.page.locator(`[aria-label="${text} Page"]`);
     await selectPaginationOption.click();

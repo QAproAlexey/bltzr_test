@@ -1,10 +1,9 @@
-import { MarketplacePage } from '../pageObjects/marketplacePage';
-import { ResearchPage } from '../pageObjects/researchPage';
-import { NFTgamesPage } from '../pageObjects/nftGamesPage';
-import { TopNavigation } from '../pageObjects/topNavigation';
-import { MetamaskPage } from "../pageObjects/metamaskPage";
-import { WebPage } from '../pageObjects/webPage';
 import { ConnectWalletScreen } from '../pageObjects/connectWalletScreen';
+import { MarketplacePage } from '../pageObjects/marketplacePage';
+import { NFTgamesPage } from '../pageObjects/nftGamesPage';
+import { ResearchPage } from '../pageObjects/researchPage';
+import { TopNavigation } from '../pageObjects/topNavigation';
+import { WebPage } from '../pageObjects/webPage';
 import { test as base } from '@playwright/test';
 
 export const test = base.extend<{
@@ -13,7 +12,6 @@ export const test = base.extend<{
   nftGamesPage: NFTgamesPage;
   marketplacePage: MarketplacePage;
   researchPage: ResearchPage;
-  metamaskPage: MetamaskPage;
   connectWalletScreen: ConnectWalletScreen;
 
 }>({
@@ -35,10 +33,6 @@ export const test = base.extend<{
   },
   researchPage: async ({ page }, use) => {
     await use(new ResearchPage(page)
-    );
-  },
-  metamaskPage: async ({ page, context }, use) => {
-    await use(new MetamaskPage(page, context)
     );
   },
   connectWalletScreen: async ({ page, context }, use) => {

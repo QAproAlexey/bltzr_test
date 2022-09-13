@@ -1,6 +1,8 @@
-import { downloadMetamask } from "../extensions/extensionsHelpers";
 import * as fs from "fs";
-// require('dotenv').config();
+
+import { downloadMetamask } from "../extensions/extensionsHelpers";
+
+require('dotenv').config();
 
 const pathToDownloadMetamask = './extensions/metamask.zip';
 const pathToExtractedMetamask = './extensions/metamask';
