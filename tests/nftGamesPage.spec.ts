@@ -36,7 +36,9 @@ test.describe('NFT Games page', async () => {
   });
 
   test('Test the ability to use carousel', async ({ nftGamesPage }) => {
-    await nftGamesPage.checkIfClickLeftOrRightButtons();
+    await nftGamesPage.checkIfClickLeftButtonInCarousel();
+
+    await nftGamesPage.checkIfClickRightButtonInCarousel();
 
     await nftGamesPage.checkIfRedirectedToGameFromCarousel();
   });

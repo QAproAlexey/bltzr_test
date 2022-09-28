@@ -12,6 +12,7 @@
         "@types/node-fetch": "^2.6.2"
     },
     "dependencies": {
+        "extact-zip": "2.8.1 ",
         "dotenv": "^16.0.2",
         "latest": "^0.2.0",
         "node-fetch": "^2.6.7",

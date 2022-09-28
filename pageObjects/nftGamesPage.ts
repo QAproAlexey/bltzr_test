@@ -4,12 +4,14 @@ import { WebPage } from './webPage';
 import { timeouts } from "../helpers/timeouts";
 
 export class NFTgamesPage extends WebPage {
+  readonly chainFiltered: Locator;
   readonly paginationCurrentButton: Locator;
   readonly dropdownShowInTheTable: Locator;
   readonly leftButtonInTheCarousel: Locator;
   readonly rightButtonInTheCarousel: Locator;
   readonly firstElementInCarousel: Locator;
   readonly lastElementInCarousel: Locator;
+  readonly urlElementInCarousel: Locator;
   readonly readMoreButton: Locator;
   readonly readLessButton: Locator;
   readonly expectWhatIsNFTgaming: Locator;
@@ -20,12 +22,14 @@ export class NFTgamesPage extends WebPage {
 
   constructor(page: Page) {
     super(page);
+    this.chainFiltered = page.locator('[data-label="Chain"]');
     this.paginationCurrentButton = page.locator('[class="paginate_button current"]');
     this.dropdownShowInTheTable = page.locator('select[name="DataTables_Table_0_length"]');
     this.leftButtonInTheCarousel = page.locator('[class="icon icon-arrow-left"]');
     this.rightButtonInTheCarousel = page.locator('[class="slick-next slick-arrow"]');
     this.firstElementInCarousel = page.locator('[class="game-item slick-slide slick-current slick-active"]');
     this.lastElementInCarousel = page.locator('(//div[@class="game-item slick-slide slick-active"])[3]');
+    this.urlElementInCarousel = page.locator('(//div[@class="game-item slick-slide slick-active"])[3]');
     this.readMoreButton = page.locator('(//a[text()="Read More "])');
     this.readLessButton = page.locator('(//a[text()="Read Less "])');
     this.expectWhatIsNFTgaming = page.locator('(//p[contains(text(),"NFT gaming is playing NFT games that offer")])');
@@ -45,16 +49,16 @@ export class NFTgamesPage extends WebPage {
     let allElements = this.page.locator('[data-label="Name"]');
     let row = await allElements.count();
     if (amount = 100) {
-      expect(row >= 51 && row <= 100);
+      expect(51).toBeLessThan(100);
     }
     if (amount = 25) {
-      expect(row >= 11 && row <= 25);
+      expect(11).toBeLessThan(25);
     }
     if (amount = 10) {
-      expect(row >= 0 && row <= 10);
+      expect(0).toBeLessThan(10);
     }
     if (amount = 50) {
-      expect(row >= 26 && row <= 50);
+      expect(26).toBeLessThan(50);
     }
   }
 
@@ -64,7 +68,7 @@ export class NFTgamesPage extends WebPage {
   }
 
   async checkThatTheChainFiltered(name: string) {
-    let rows = this.page.locator('[data-label="Chain"]');
+    let rows = this.chainFiltered;
     let texts = await rows.allTextContents();
 
     for (const chain of texts) {
@@ -106,18 +110,28 @@ export class NFTgamesPage extends WebPage {
     await expect(attribute).toContain("display: none;");
   }
 
-  async checkIfClickLeftOrRightButtons() {
+  async checkIfClickLeftButtonInCarousel() {
     await this.leftButtonInTheCarousel.click();
-    let locator = this.page.locator('(//*[@class="game-item__thumbnail"])[1]');
-    const href = await locator.getAttribute('href');
-    expect(locator).toBeVisible();
+    let locator = this.firstElementInCarousel;
+    const atr = await locator.getAttribute('atr');
+    await expect(atr).toBe('0');
     await this.rightButtonInTheCarousel.click();
-    expect(locator).not.toBeVisible();
+    await expect(atr).not.toBe('0');
   }
+
+  async checkIfClickRightButtonInCarousel() {
+    await this.rightButtonInTheCarousel.click();
+    let locator = this.lastElementInCarousel;
+    const atr = await locator.getAttribute('atr');
+    await expect(atr).toBe('0');
+    await this.leftButtonInTheCarousel.click();
+    await expect(atr).not.toBe('0');
+  }
+
   async checkIfRedirectedToGameFromCarousel() {
-    const locator = this.page.locator('(//*[@class="game-item__thumbnail"])[1]');
+    const locator = this.urlElementInCarousel;
     const href = await locator.getAttribute('href');
-    await this.page.goto(`https://bltzr.gg${href}`)
+    await this.firstElementInCarousel.click();
     await expect(this.page).toHaveURL(`https://bltzr.gg${href}`);
   }
 

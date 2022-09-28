@@ -6,12 +6,14 @@ export class MarketplacePage extends WebPage {
   readonly checkBoxChecked: Locator;
   readonly firstElemetBuyButton: Locator;
   readonly clearAllFiltersButton: Locator;
+  readonly listFilterd: Locator;
 
   constructor(page: Page) {
     super(page);
     this.checkBoxChecked = page.locator('//span[@data-checked]');
     this.firstElemetBuyButton = page.locator('(//button[@class="chakra-button css-gf2dhn"]) [1]');
     this.clearAllFiltersButton = page.locator('[class="chakra-text css-146q31f"]');
+    this.listFilterd = page.locator('(//td[@class="css-12t8qlj"] [3])');
   }
 
   async selectFilterCheckBox(text) {
@@ -21,7 +23,7 @@ export class MarketplacePage extends WebPage {
   }
 
   async checkThatTheListFiltered(text: string) {
-    const rows = this.page.locator('(//td[@class="css-12t8qlj"] [3])');
+    const rows = this.listFilterd;
     const texts = await rows.allTextContents();
 
     for (const name of texts) {
