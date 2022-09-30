@@ -28,14 +28,14 @@ test.describe('Marketplace Page', async () => {
 
   test('Test the ability to clicking on th button BUY', async ({ marketplacePage }) => {
     await marketplacePage.clickingOnTheBuyButton();
-    await marketplacePage.expectIfclickingOnTheBuyButton();
+    await marketplacePage.expectIfClickingOnTheBuyButton();
   });
 
   const nftId = ['103', '104', '105', '106', '100']
   for (const id of nftId) {
     test(`Test the ability to use blockchaine filters in the table with ${id}`, async ({ marketplacePage }) => {
       await marketplacePage.selectNftId(id);
-      await marketplacePage.expectIfclickingOnTheBuyButton(id);
+      await marketplacePage.expectIfClickingOnTheBuyButton();
     })
   };
 

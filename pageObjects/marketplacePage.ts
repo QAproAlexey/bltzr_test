@@ -1,19 +1,21 @@
-import { Locator, Page, expect } from '@playwright/test';
-import { timeouts } from "../helpers/timeouts";
+import { BrowserContext, Locator, Page, expect } from '@playwright/test';
+
 import { WebPage } from './webPage';
+import { timeouts } from "../helpers/timeouts";
 
 export class MarketplacePage extends WebPage {
+  readonly context: BrowserContext;
   readonly checkBoxChecked: Locator;
-  readonly firstElemetBuyButton: Locator;
+  readonly firstElementBuyButton: Locator;
   readonly clearAllFiltersButton: Locator;
-  readonly listFilterd: Locator;
+  readonly listFiltered: Locator;
 
-  constructor(page: Page) {
+  constructor(page: Page, context?: BrowserContext) {
     super(page);
     this.checkBoxChecked = page.locator('//span[@data-checked]');
-    this.firstElemetBuyButton = page.locator('(//button[@class="chakra-button css-gf2dhn"]) [1]');
+    this.firstElementBuyButton = page.locator('(//button[@class="chakra-button css-gf2dhn"]) [1]');
     this.clearAllFiltersButton = page.locator('[class="chakra-text css-146q31f"]');
-    this.listFilterd = page.locator('(//td[@class="css-12t8qlj"] [3])');
+    this.listFiltered = page.locator('(//td[@class="css-12t8qlj"] [3])');
   }
 
   async selectFilterCheckBox(text) {
@@ -23,11 +25,9 @@ export class MarketplacePage extends WebPage {
   }
 
   async checkThatTheListFiltered(text: string) {
-    const rows = this.listFilterd;
-    const texts = await rows.allTextContents();
-
+    const texts = await this.listFiltered.allTextContents();
     for (const name of texts) {
-      expect(name).toContain(text);
+      await expect(name).toContain(text);
     }
   }
 
@@ -39,8 +39,13 @@ export class MarketplacePage extends WebPage {
     await this.clearAllFiltersButton.click();
   }
 
-  async expectIfclickingOnTheBuyButton() {
-    await expect(this.page).toHaveURL('https://opensea.io/assets/matic/0xee37b43221375b93e3b3d60092210f681e68aeb2/103');
+  async clickingOnTheBuyButton() {
+    await this.firstElementBuyButton.click();
+  }
+
+
+  async expectIfClickingOnTheBuyButton(page) {
+    await expect(page).toHaveURL(/.*103/);
   }
 
   async selectNftId(text) {

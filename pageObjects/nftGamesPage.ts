@@ -49,17 +49,18 @@ export class NFTgamesPage extends WebPage {
     let allElements = this.page.locator('[data-label="Name"]');
     let row = await allElements.count();
     if (amount = 100) {
-      expect(51).toBeLessThan(100);
+      expect(row >= 51 && row <= 100);
     }
     if (amount = 25) {
-      expect(11).toBeLessThan(25);
+      expect(row >= 11 && row <= 25);
     }
     if (amount = 10) {
-      expect(0).toBeLessThan(10);
+      expect(row >= 0 && row <= 10);
     }
     if (amount = 50) {
-      expect(26).toBeLessThan(50);
+      expect(row >= 26 && row <= 50);
     }
+    else { console.log('not enough elements on the page') };
   }
 
   async selectChainFilterByName(text) {
@@ -68,11 +69,9 @@ export class NFTgamesPage extends WebPage {
   }
 
   async checkThatTheChainFiltered(name: string) {
-    let rows = this.chainFiltered;
-    let texts = await rows.allTextContents();
-
+    const texts = await this.chainFiltered.allTextContents();
     for (const chain of texts) {
-      expect(chain).toContain(name);
+      await expect(chain).toContain(name);
     }
   }
 
